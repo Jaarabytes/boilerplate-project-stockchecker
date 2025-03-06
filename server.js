@@ -1,8 +1,10 @@
+
 'use strict';
 require('dotenv').config();
 const express     = require('express');
 const bodyParser  = require('body-parser');
 const cors        = require('cors');
+const helmet      = require('helmet');
 
 const apiRoutes         = require('./routes/api.js');
 const fccTestingRoutes  = require('./routes/fcctesting.js');
@@ -16,7 +18,9 @@ app.use(cors({origin: '*'})); //For FCC testing purposes only
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(helmet.contentSecurityPolicy({
+  directives: {imgSrc: ["'self'"], defaultSrc: ["'self'"], scriptSrc: ["'self'"], styleSrc: ["'self'"],}
+}))
 //Index page (static HTML)
 app.route('/')
   .get(function (req, res) {
@@ -53,3 +57,4 @@ const listener = app.listen(process.env.PORT || 3000, function () {
 });
 
 module.exports = app; //for testing
+
